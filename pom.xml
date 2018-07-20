@@ -23,6 +23,12 @@
       <name>Internal snapshots repository</name>
       <url>http://repository.maven.tyforge.in.ac-rennes.fr/snapshots/</url>
     </snapshotRepository>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>releases</id>
+      <name>Internal releases repository</name>
+      <url>http://nexus.tyforge.in.ac-rennes.fr/nexus/content/repositories/releases</url>
+    </repository>
   </distributionManagement>
   <properties>
     <!-- Libraries versions -->
