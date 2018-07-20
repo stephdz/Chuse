@@ -121,9 +121,6 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
 
     /**
      * Creates the CHECKED_FILES table if it doesn't exist.
-     *
-     * @throws SQLException
-     *             SQL Error
      */
     protected void createTableIfNecessary() {
         try {
