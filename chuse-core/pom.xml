@@ -3,7 +3,7 @@
   <parent>
     <groupId>fr.dz.chuse</groupId>
     <artifactId>chuse</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
   </parent>
   <artifactId>chuse-core</artifactId>
   <name>Chuse Core</name>
