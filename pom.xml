@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.dz.chuse</groupId>
+  <artifactId>chuse</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Chuse</name>
+  <description>Check Hibernate Until Schema Export</description>
+  <modules>
+    <module>chuse-core</module>
+	<module>chuse-spring-jpa</module>
+  </modules>
+  <properties>
+    <!-- Libraries versions -->
+    <commons-dbutils.version>1.7</commons-dbutils.version>
+    <lombok.version>1.18.0</lombok.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <hibernate-jpa.version>1.0.2.Final</hibernate-jpa.version>
+    <spring.version>5.0.7.RELEASE</spring.version>
+    <!-- Test libraries versions -->
+    <junit.version>5.1.0</junit.version>
+    <commons-dbcp2.version>2.5.0</commons-dbcp2.version>
+    <h2.version>1.4.197</h2.version>
+    <mockito.version>2.19.1</mockito.version>
+    <!-- Encoding and Java version -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+    
+      <!-- 
+        ** Runtime Dependencies
+        -->
+    
+      <!-- Commons DbUtils -->
+      <dependency>
+        <groupId>commons-dbutils</groupId>
+        <artifactId>commons-dbutils</artifactId>
+        <version>${commons-dbutils.version}</version>
+      </dependency>
+      <!-- Lombok -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- SLF4J -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <!-- Hibernate JPA -->
+      <dependency>
+        <groupId>org.hibernate.javax.persistence</groupId>
+        <artifactId>hibernate-jpa-2.1-api</artifactId>
+        <version>${hibernate-jpa.version}</version>
+      </dependency>
+      <!-- Spring Context -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- Spring ORM -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${spring.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      
+    
+      <!-- 
+        ** Test Libraries
+        -->
+      
+      <!-- JUnit -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <!-- SLF4J / LOG4J12 -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <!-- Commons DBCP 2 -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${commons-dbcp2.version}</version>
+      </dependency>
+      <!-- H2 Database -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
+      </dependency>
+      <!-- Mockito -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>
