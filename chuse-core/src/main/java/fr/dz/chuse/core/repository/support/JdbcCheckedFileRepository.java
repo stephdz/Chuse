@@ -21,48 +21,17 @@ import fr.dz.chuse.core.utils.DateUtils;
  */
 public class JdbcCheckedFileRepository implements CheckedFileRepository {
 
-    // @formatter:off
-    private static final String CREATE_TABLE_QUERY = MessageFormat.format(
-            "CREATE TABLE IF NOT EXISTS {0} ( "
-                    + "{1} VARCHAR(4096) NOT NULL, "
-                    + "{2} TIMESTAMP NOT NULL, "
-                    + "PRIMARY KEY({1}) )",
-            RepositoryConstants.CHECKED_FILES_TABLE_NAME,
-            RepositoryConstants.CHECKED_FILES_NAME_FIELD,
-            RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
-    // @formatter:on
-
-    // @formatter:off
-    private static final String UPDATE_QUERY = MessageFormat.format(
-            "UPDATE {0} SET {2}=? WHERE {1}=?",
-            RepositoryConstants.CHECKED_FILES_TABLE_NAME,
-            RepositoryConstants.CHECKED_FILES_NAME_FIELD,
-            RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
-    // @formatter:on
-
-    // @formatter:off
-    private static final String INSERT_QUERY = MessageFormat.format(
-            "INSERT INTO {0}({1},{2}) VALUES (?,?)",
-            RepositoryConstants.CHECKED_FILES_TABLE_NAME,
-            RepositoryConstants.CHECKED_FILES_NAME_FIELD,
-            RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
-    // @formatter:on
-
-    // @formatter:off
-    private static final String SELECT_QUERY = MessageFormat.format(
-            "SELECT {1}, {2} FROM {0} ORDER BY {1}",
-            RepositoryConstants.CHECKED_FILES_TABLE_NAME,
-            RepositoryConstants.CHECKED_FILES_NAME_FIELD,
-            RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
-    // @formatter:on
-
-    // @formatter:off
-    private static final String DELETE_ALL_QUERY = MessageFormat.format(
-            "TRUNCATE TABLE {0}",
-            RepositoryConstants.CHECKED_FILES_TABLE_NAME);
-    // @formatter:on
-
     private final QueryRunner queryRunner;
+
+    private final String createTableQuery;
+
+    private final String updateQuery;
+
+    private final String insertQuery;
+
+    private final String selectQuery;
+
+    private final String deleteAllQuery;
 
     /**
      * Constructor.
@@ -71,7 +40,67 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
      *            The datasource
      */
     public JdbcCheckedFileRepository(final DataSource datasource) {
+        this(datasource, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param datasource
+     *            The datasource
+     * @param schema
+     *            The schema used to store the checked files
+     */
+    public JdbcCheckedFileRepository(final DataSource datasource, final String schema) {
+        super();
         this.queryRunner = new QueryRunner(datasource);
+
+        // Dertermine table name
+        String tableName = RepositoryConstants.CHECKED_FILES_TABLE_NAME;
+        if (schema != null && !schema.trim().isEmpty()) {
+            tableName = String.format("%s.%s", schema, tableName);
+        }
+
+        // @formatter:off
+        this.createTableQuery = MessageFormat.format(
+                "CREATE TABLE IF NOT EXISTS {0} ( "
+                        + "{1} VARCHAR(4096) NOT NULL, "
+                        + "{2} TIMESTAMP NOT NULL, "
+                        + "PRIMARY KEY({1}) )",
+                tableName,
+                RepositoryConstants.CHECKED_FILES_NAME_FIELD,
+                RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
+        // @formatter:on
+
+        // @formatter:off
+        this.updateQuery = MessageFormat.format(
+                "UPDATE {0} SET {2}=? WHERE {1}=?",
+                tableName,
+                RepositoryConstants.CHECKED_FILES_NAME_FIELD,
+                RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
+        // @formatter:on
+
+        // @formatter:off
+        this.insertQuery = MessageFormat.format(
+                "INSERT INTO {0}({1},{2}) VALUES (?,?)",
+                tableName,
+                RepositoryConstants.CHECKED_FILES_NAME_FIELD,
+                RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
+        // @formatter:on
+
+        // @formatter:off
+        this.selectQuery = MessageFormat.format(
+                "SELECT {1}, {2} FROM {0} ORDER BY {1}",
+                tableName,
+                RepositoryConstants.CHECKED_FILES_NAME_FIELD,
+                RepositoryConstants.CHECKED_FILES_LAST_MODIFIED_TIME_FIELD);
+        // @formatter:on
+
+        // @formatter:off
+        this.deleteAllQuery = MessageFormat.format(
+                "TRUNCATE TABLE {0}",
+                tableName);
+        // @formatter:on
     }
 
     @Override
@@ -82,7 +111,7 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
         Timestamp timestampLastModifiedTime = DateUtils.toSqlTimestamp(file.getLastModifiedTime());
         int modified;
         try {
-            modified = this.queryRunner.update(UPDATE_QUERY, timestampLastModifiedTime,
+            modified = this.queryRunner.update(this.updateQuery, timestampLastModifiedTime,
                     file.getName());
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to update a checked file", e);
@@ -91,7 +120,8 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
         // No modified line : we create it
         if (modified == 0) {
             try {
-                this.queryRunner.update(INSERT_QUERY, file.getName(), timestampLastModifiedTime);
+                this.queryRunner.update(this.insertQuery, file.getName(),
+                        timestampLastModifiedTime);
             } catch (SQLException e) {
                 throw new IllegalStateException("Unable to insert a checked file", e);
             }
@@ -102,7 +132,7 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
     public List<CheckedFile> findAll() {
         this.createTableIfNecessary();
         try {
-            return this.queryRunner.query(SELECT_QUERY,
+            return this.queryRunner.query(this.selectQuery,
                     JdbcCheckedFileRepository::mapToCheckedFile);
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to find checked files", e);
@@ -113,7 +143,7 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
     public void deleteAll() {
         this.createTableIfNecessary();
         try {
-            this.queryRunner.update(DELETE_ALL_QUERY);
+            this.queryRunner.update(this.deleteAllQuery);
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to delete all checked files table", e);
         }
@@ -124,7 +154,7 @@ public class JdbcCheckedFileRepository implements CheckedFileRepository {
      */
     protected void createTableIfNecessary() {
         try {
-            this.queryRunner.update(CREATE_TABLE_QUERY);
+            this.queryRunner.update(this.createTableQuery);
         } catch (SQLException e) {
             throw new IllegalStateException("Unable to create checked files table", e);
         }
