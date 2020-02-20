@@ -1,10 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>9</version>
-  </parent>
   <groupId>com.github.stephdz.chuse</groupId>
   <artifactId>chuse</artifactId>
   <version>0.1.4-SNAPSHOT</version>
@@ -15,12 +10,37 @@
     <module>chuse-core</module>
 	<module>chuse-spring-jpa</module>
   </modules>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
   <scm>
-    <developerConnection>
-        scm:git:https://github.com/stephdz/Chuse.git
-    </developerConnection>
+	<connection>scm:git:https://github.com/stephdz/Chuse.git</connection>
+    <developerConnection>scm:git:https://github.com/stephdz/Chuse.git</developerConnection>
+    <url>scm:git:https://github.com/stephdz/Chuse.git</url>
     <tag>HEAD</tag>
   </scm>
+  <url>https://github.com/stephdz/Chuse</url>
+  <developers>
+    <developer>
+      <name>Stéphane DESHIERE</name>
+      <email>stephane.deshiere@gmail.com</email>
+    </developer>
+  </developers>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </distributionManagement>
   <properties>
     <!-- Libraries versions -->
     <commons-dbutils.version>1.7</commons-dbutils.version>
@@ -144,17 +164,66 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!-- Override Sonatype plugins versions -->
+	  <!-- Attach source jars-->
+	  <plugin>
+		<artifactId>maven-source-plugin</artifactId>
+		<version>2.4</version>
+		<executions>
+		  <execution>
+			<id>attach-source</id>
+			<phase>compile</phase>
+			<goals>
+			  <goal>jar-no-fork</goal>
+			</goals>
+		  </execution>
+		</executions>
+	  </plugin>
+	  <!-- Attach javadocs jar -->
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-javadoc-plugin</artifactId>
+		<version>3.0.0</version>
+		<executions>
+		  <execution>
+			<id>attach-javadocs</id>
+			<goals>
+			  <goal>jar</goal>
+			</goals>
+		  </execution>
+		</executions>
+	  </plugin>
+      <!-- Sign artifacts for uploading to maven central -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
+	  <!-- Release plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
-      </plugin>
+        <configuration>
+          <tagNameFormat>@{project.version}</tagNameFormat>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+        </configuration>
+	  </plugin>
     </plugins>
   </build>
 </project>
