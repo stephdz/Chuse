@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.github.stephdz.chuse</groupId>
     <artifactId>chuse</artifactId>
-    <version>0.1.4-SNAPSHOT</version>
+    <version>0.1.4</version>
   </parent>
   <artifactId>chuse-core</artifactId>
   <name>Chuse Core</name>
