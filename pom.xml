@@ -5,7 +5,7 @@
     <artifactId>oss-parent</artifactId>
     <version>9</version>
   </parent>
-  <groupId>fr.dz.chuse</groupId>
+  <groupId>com.github.stephdz.chuse</groupId>
   <artifactId>chuse</artifactId>
   <version>0.1.4-SNAPSHOT</version>
   <packaging>pom</packaging>
