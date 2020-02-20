@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.stephdz.chuse</groupId>
   <artifactId>chuse</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Chuse</name>
   <description>Check Hibernate Until Schema Export</description>
@@ -20,7 +20,7 @@
 	<connection>scm:git:https://github.com/stephdz/Chuse.git</connection>
     <developerConnection>scm:git:https://github.com/stephdz/Chuse.git</developerConnection>
     <url>scm:git:https://github.com/stephdz/Chuse.git</url>
-    <tag>0.1.4</tag>
+    <tag>HEAD</tag>
   </scm>
   <url>https://github.com/stephdz/Chuse</url>
   <developers>
